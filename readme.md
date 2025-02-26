@@ -1,0 +1,1 @@
+Using the comp_detect_csv dataset, I aim to create a neural network which will be able to tell if a file is encrypted or compressed based on the entropy.

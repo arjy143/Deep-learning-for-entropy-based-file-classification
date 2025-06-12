@@ -35,7 +35,7 @@ def create_feature_row(row):
     most_common = np.bincount(byte_array).max()
     value_range = byte_array.max() - byte_array.min()
     
-    return [entropy, mean, std_dev, unique_count, most_common, value_range]
+    return [entropy, mean, unique_count, most_common]
 
 def create_features(input):
     new_dataset = []
@@ -57,3 +57,22 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 print(classification_report(y_test, predictions))
 
+#using features [entropy, mean, std_dev, unique_count, most_common, value_range]
+#               precision    recall  f1-score   support
+
+#            0       0.60      0.57      0.58      1690
+#            1       0.58      0.61      0.60      1669
+
+#     accuracy                           0.59      3359
+#    macro avg       0.59      0.59      0.59      3359
+# weighted avg       0.59      0.59      0.59      3359
+
+#using features [entropy, mean, unique_count, most_common]
+#               precision    recall  f1-score   support
+
+#            0       0.61      0.64      0.63      1723
+#            1       0.60      0.57      0.59      1636
+
+#     accuracy                           0.61      3359
+#    macro avg       0.61      0.61      0.61      3359
+# weighted avg       0.61      0.61      0.61      3359

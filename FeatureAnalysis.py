@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
 
 url = "https://raw.githubusercontent.com/daniel-h-0/comp_detect_csv/master/dataset_0.csv"
 
@@ -36,6 +37,7 @@ def create_feature_row(row):
     value_range = byte_array.max() - byte_array.min()
     
     return [entropy, mean, unique_count, most_common]
+    #return [entropy, mean, std_dev, unique_count, most_common, value_range]
 
 def create_features(input):
     new_dataset = []
@@ -52,9 +54,16 @@ feature_matrix = np.array(features.tolist())
 
 X_train, X_test, y_train, y_test = train_test_split(feature_matrix, y, test_size=0.2)
 
-model = MLPClassifier()
+model = MLPClassifier(hidden_layer_sizes=(128, 64, 32),
+                      activation='relu',
+                      solver='adam',
+                      learning_rate='adaptive',
+                      alpha=0.005,
+                      max_iter=500)
+
 model.fit(X_train, y_train)
 predictions = model.predict(X_test)
+print(f"accuracy: {accuracy_score(y_test, predictions)}")
 print(classification_report(y_test, predictions))
 
 #using features [entropy, mean, std_dev, unique_count, most_common, value_range]
@@ -76,3 +85,21 @@ print(classification_report(y_test, predictions))
 #     accuracy                           0.61      3359
 #    macro avg       0.61      0.61      0.61      3359
 # weighted avg       0.61      0.61      0.61      3359
+
+#best: accuracy: 0.6281631437927955
+
+rf = RandomForestClassifier(
+    n_estimators=1000,
+    max_depth=15,
+    min_samples_split=5,
+    min_samples_leaf=2,
+    n_jobs=-1
+)
+rf.fit(X_train, y_train)
+rf_predictions = rf.predict(X_test)
+
+print("Random forest")
+print(f"accuracy: {accuracy_score(y_test, rf_predictions)}")
+print(classification_report(y_test, rf_predictions))
+
+#best: accuracy: 0.6567430782971122
